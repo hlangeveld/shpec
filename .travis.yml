@@ -1,17 +1,41 @@
 language: sh
 env:
   matrix:
-    - SHELL=bash
-    - SHELL=dash
-    - SHELL=ksh
-    - SHELL=zsh
+    # waiting on better matrix syntax https://github.com/travis-ci/travis-ci/issues/1519
+    - LINT=true  SHELL=bash
+    - LINT=true  SHELL=dash
+    - LINT=true  SHELL=ksh
+    - LINT=true  SHELL=zsh
+    - LINT=false SHELL=bash
+    - LINT=false SHELL=dash
+    - LINT=false SHELL=ksh
+    - LINT=false SHELL=zsh
 matrix:
+  fast_finish: true
   allow_failures:
-    - env: SHELL=zsh
+    - env: LINT=true  SHELL=bash
+    - env: LINT=true  SHELL=dash
+    - env: LINT=true  SHELL=ksh
+    - env: LINT=true  SHELL=zsh
+    - env: LINT=false SHELL=zsh
 script:
-  - time $SHELL bin/shpec -f 1 shpec/shpec_shpec.sh
+  - >
+    if $LINT; then
+      shellcheck -s $SHELL bin/shpec
+    else
+      time $SHELL bin/shpec -f 1 shpec/shpec_shpec.sh
+    fi
 cache: apt
 before_install:
+  - >
+    if $LINT; then
+      # sudo apt-get update -qq
+      # sudo apt-get install shellcheck
+      sudo apt-get install cabal-install
+      sudo cabal update
+      sudo cabal install shellcheck
+      export PATH=$PATH:/home/travis/.cabal/bin
+    fi
   - >
     if ! type $SHELL > /dev/null; then
       sudo apt-get update -qq
