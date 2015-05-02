@@ -38,6 +38,6 @@ before_install:
     fi
     if ! type $SHELL > /dev/null; then
         sudo apt-get update -qq &&
-        sudo apt-get install -y $SHELL || 
+        sudo apt-get install -y $SHELL
     fi
     $SHELL -c : && echo $SHELL ok
