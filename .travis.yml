@@ -26,7 +26,7 @@ before_install:
       do
         pkg=shellcheck_${v}_amd64.deb
         url="http://ftp.debian.org/debian/pool/main/s/shellcheck/"
-        wget $url/$pkg || continue
+        wget $url/$pkg > /dev/null 2>& 1 || continue
         echo $pkg 
         break
       done
@@ -34,10 +34,10 @@ before_install:
     }
     if ${LINT:-false}; then
       pkg=$( get_shellcheck 0.3.7-1 0.3.5-3 0.3.4-3 )
-      exec sudo dpkg -i $pkg
+      sudo dpkg -i $pkg && echo ok || echo no $?
     fi
     if ! type $SHELL > /dev/null; then
         sudo apt-get update -qq &&
-        sudo apt-get install -y $SHELL
+        sudo apt-get install -y $SHELL || 
     fi
-    $SHELL -c :
+    $SHELL -c : && echo $SHELL ok
