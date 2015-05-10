@@ -2,6 +2,7 @@ language: sh
 env:
   matrix:
     - LINT=true
+    - SHELL=mksh
     - SHELL=bash
     - SHELL=dash
     - SHELL=ksh
