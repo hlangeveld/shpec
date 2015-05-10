@@ -25,8 +25,8 @@ before_install:
       for v
       do
         pkg=shellcheck_${v}_amd64.deb
-        url="http://ftp.debian.org/debian/pool/main/s/shellcheck/"
-        wget $url/$pkg || continue
+        url="http://ftp.debian.org/debian/pool/main/s/shellcheck"
+        wget -nv $url/$pkg || continue
         echo $pkg
         break
       done
