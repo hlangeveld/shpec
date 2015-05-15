@@ -99,6 +99,12 @@ line'
       rm /tmp/foo
     end
 
+    it "fails when given an empty filename"
+      m=$(assert file_present "" 2>& 1)
+      assert unequal $? 0
+      assert present "$m"
+    end
+
     it "can verify the pointer of a symlink"
       ln -s $HOME /tmp/link
       assert symlink /tmp/link "$HOME"
